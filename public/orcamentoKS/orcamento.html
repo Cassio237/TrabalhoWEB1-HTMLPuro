@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orçamento</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/orcamento.js" defer></script>
+</head>
+<body>
+
+  <div class="app-layout">
+
+    <aside class="sidebar">
+      <h2 class="sidebar-title">OrçamentoKS</h2>
+      <nav class="sidebar-menu">
+        <a href="index.html" class="sidebar-item">Orçamentos</a>
+        <button type="button" id="menuClientes" class="sidebar-item">Clientes</button>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+
+      <form id="orcamentoForm" class="orcamento-form" novalidate>
+
+        <!-- ===================== TOPO: NÚMERO E DATA ===================== -->
+        <header class="orcamento-header">
+          <div class="field field-inline">
+            <label for="numeroOrcamento">Nº do orçamento</label>
+            <input type="text" id="numeroOrcamento" name="numeroOrcamento" readonly>
+          </div>
+          <div class="field field-inline">
+            <label for="dataOrcamento">Data</label>
+            <input type="date" id="dataOrcamento" name="dataOrcamento" required>
+          </div>
+        </header>
+
+        <!-- ===================== 1. QUEM FAZ O ORÇAMENTO ===================== -->
+        <section class="card">
+          <h2 class="card-title">Quem faz o orçamento</h2>
+          <div class="card-content two-columns">
+
+            <div class="logo-upload">
+              <label for="logoInput" class="logo-label">
+                <img id="logoPreview" class="logo-preview" alt="Logo">
+                <span class="logo-placeholder-text">Clique para adicionar a logo</span>
+              </label>
+              <input type="file" id="logoInput" name="logo" accept="image/*" hidden>
+            </div>
+
+            <div class="fields-grid fields-grid-4">
+              <div class="field field-span-4">
+                <label for="empresaNome">Nome</label>
+                <input type="text" id="empresaNome" name="empresaNome" required>
+              </div>
+              <div class="field field-span-4">
+                <label for="empresaEndereco">Endereço</label>
+                <input type="text" id="empresaEndereco" name="empresaEndereco" required>
+              </div>
+              <div class="field field-span-1">
+                <label for="empresaTelefone">Telefone</label>
+                <input type="tel" id="empresaTelefone" name="empresaTelefone" required>
+              </div>
+              <div class="field field-span-2">
+                <label for="empresaEmail">E-mail</label>
+                <input type="email" id="empresaEmail" name="empresaEmail" required>
+              </div>
+              <div class="field field-span-1">
+                <label for="empresaResponsavel">Responsável</label>
+                <input type="text" id="empresaResponsavel" name="empresaResponsavel">
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ===================== 2. CLIENTE ===================== -->
+        <section class="card">
+          <div class="card-title-row">
+            <h2 class="card-title">Cliente</h2>
+            <button type="button" id="btnCarregarCliente" class="btn btn-secondary">Carregar cliente</button>
+          </div>
+          <div class="card-content fields-grid fields-grid-4">
+            <div class="field field-span-2">
+              <label for="clienteCpfCnpj">CPF/CNPJ</label>
+              <input type="text" id="clienteCpfCnpj" name="clienteCpfCnpj" required>
+            </div>
+            <div class="field field-span-4">
+              <label for="clienteRazaoSocial">Razão Social</label>
+              <input type="text" id="clienteRazaoSocial" name="clienteRazaoSocial" required>
+            </div>
+            <div class="field field-span-3">
+              <label for="clienteEndereco">Endereço</label>
+              <input type="text" id="clienteEndereco" name="clienteEndereco" required>
+            </div>
+            <div class="field field-span-1">
+              <label for="clienteTelefone">Telefone</label>
+              <input type="tel" id="clienteTelefone" name="clienteTelefone" required>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================== 3. DESCRIÇÃO DO SERVIÇO ===================== -->
+        <section class="card">
+          <h2 class="card-title">Descrição do serviço</h2>
+          <div class="card-content">
+            <div class="table-wrapper">
+              <table class="servicos-table" id="tabelaServicos">
+                <thead>
+                  <tr>
+                    <th class="col-tipo">Tipo</th>
+                    <th class="col-descricao">Descrição</th>
+                    <th class="col-valor">Valor unitário</th>
+                    <th class="col-qtd">Quantidade</th>
+                    <th class="col-valor">Valor total</th>
+                    <th class="col-acao"></th>
+                  </tr>
+                </thead>
+                <tbody id="tabelaServicosBody">
+                  <!-- Linhas geradas via JS (5 iniciais) -->
+                </tbody>
+              </table>
+            </div>
+
+            <button type="button" id="btnAdicionarLinha" class="btn-add-row" title="Adicionar linha">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              Adicionar linha
+            </button>
+          </div>
+        </section>
+
+        <!-- ===================== 4. CONDIÇÕES DE PAGAMENTO ===================== -->
+        <section class="card">
+          <h2 class="card-title">Condições de pagamento</h2>
+          <div class="card-content fields-grid">
+
+            <div class="field">
+              <label for="valorServicos">Valor dos serviços</label>
+              <input type="text" id="valorServicos" name="valorServicos" readonly>
+            </div>
+
+            <div class="field">
+              <label for="descontoValor">Desconto</label>
+              <div class="desconto-group">
+                <input type="number" id="descontoValor" name="descontoValor" min="0" step="0.01" value="0">
+                <label class="radio-inline">
+                  <input type="radio" name="descontoTipo" id="descontoTipoPercentual" value="percentual" checked>
+                  %
+                </label>
+                <label class="radio-inline">
+                  <input type="radio" name="descontoTipo" id="descontoTipoMonetario" value="monetario">
+                  R$
+                </label>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="formaPagamento">Forma de pagamento</label>
+              <input type="text" id="formaPagamento" name="formaPagamento">
+            </div>
+
+            <div class="field">
+              <label for="valorTotalFinal">Valor total</label>
+              <input type="text" id="valorTotalFinal" name="valorTotalFinal" readonly>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ===================== 5. OBSERVAÇÕES ===================== -->
+        <section class="card">
+          <h2 class="card-title">Observações</h2>
+          <div class="card-content">
+            <textarea id="observacoes" name="observacoes" rows="4"></textarea>
+          </div>
+        </section>
+
+        <!-- ===================== AÇÕES ===================== -->
+        <footer class="orcamento-actions">
+          <button type="submit" id="btnSalvar" class="btn btn-primary">Salvar</button>
+          <button type="button" id="btnSalvarImprimir" class="btn btn-secondary">Salvar e imprimir</button>
+        </footer>
+
+      </form>
+
+    </main>
+
+  </div>
+
+  <!-- ===================== MODAL: CARREGAR CLIENTE ===================== -->
+  <div id="modalClientes" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Carregar cliente</h3>
+        <button type="button" id="btnFecharModal" class="modal-close" aria-label="Fechar">&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="text" id="modalBuscaCliente" placeholder="Buscar por nome ou CNPJ/CPF..." class="modal-search">
+        <ul id="modalListaClientes" class="modal-list">
+          <!-- Preenchido via JS (dados de exemplo por enquanto) -->
+        </ul>
+        <p id="modalListaVazia" class="empty-state">Nenhum cliente cadastrado ainda.</p>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
