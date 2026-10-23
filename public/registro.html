@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../src/app/favicon.ico">
+    <title>Cadastro - FinPlan</title>
+    <script defer src="js/main.js"></script>
+    <script defer src="js/registro.js"></script>
+    <!-- Evita o flash -->
+    <script>
+        try {
+            const temax = localStorage.getItem('tema');
+            if (temax === 'dark') {
+                document.documentElement.dataset.theme = 'dark';
+            }
+        } catch (e) {
+            console.error('Erro ao acessar o localStorage:', e);
+        }
+    </script>
+
+    <link rel="stylesheet" href="css/globals.css">
+    <link rel="stylesheet" href="css/auth.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+</head>
+
+<body>
+    <header>
+        <div class="acessibilidade" role="group" aria-label="Acessibilidade">
+            <button type="button" id="btnTema" aria-pressed="false" aria-label="Alternar tema escuro">
+                <i class="bi bi-moon-fill mostra-no-claro" aria-hidden="true"></i>
+                <i class="bi bi-sun-fill mostra-no-escuro" aria-hidden="true"></i>
+                <span class="mostra-no-claro">Tema Escuro</span>
+                <span class="mostra-no-escuro">Tema Claro</span>
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <form id="formRegistro" action="" method="post">
+            <div class="logo">
+                <i class="bi bi-wallet2" aria-hidden="true"></i>
+                <div class="logo-text">
+                    <h1>FinPlan</h1>
+                    <p>Meu norte</p>
+                </div>
+            </div>
+            <h2>Crie sua conta</h2>
+            <p>Organize receitas, despesas e metas em um só lugar.</p>
+            <div class="form-group">
+                <label for="nomeCriar">Nome:</label>
+                <input type="text" id="nomeCriar" name="nome" autocomplete="name" required>
+            </div>
+            <div class="form-group">
+                <label for="emailCriar">Email:</label>
+                <input type="email" id="emailCriar" name="email" autocomplete="email" required>
+            </div>
+            <div class="form-group">
+                <label for="senhaCriar">Senha:</label>
+                <div class="senha-container">
+                    <input class="senha" type="password" id="senhaCriar" name="senha" autocomplete="new-password" required>
+                    <button class="btn-toggle-senha" type="button" id="btnToggleSenha" aria-label="Mostrar senha">
+                        <i class="bi bi-eye-fill" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <p>No minimo 6 caracteres</p>
+            </div>
+            <div class="form-group">
+                <label for="confirmarSenhaCriar">Confirmar Senha:</label>
+                <div class="senha-container">
+                    <input class="senha" type="password" id="confirmarSenhaCriar" name="confirmar-senha"
+                        autocomplete="new-password" required>
+                    <button class="btn-toggle-senha" type="button" id="btnToggleConfirmarSenha"
+                        aria-label="Mostrar senha">
+                        <i class="bi bi-eye-fill" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+            <button type="submit">Criar Conta</button>
+            <p>Já tem uma conta? <a href="index.html">Entrar</a></p>
+
+            <p id="msgFeedback"></p>
+        </form>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Projeto Web 1</p>
+    </footer>
+
+</body>
+
+</html>

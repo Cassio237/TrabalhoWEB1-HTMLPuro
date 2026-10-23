@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../../src/app/favicon.ico">
+    <title>Relatórios - FinPlan</title>
+    <script defer src="../js/main.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/echarts@5.6.0/dist/echarts.min.js"></script>
+    <script type="module" src="../js/dashboard.js"></script>
+    <script type="module" src="../js/relatorios.js"></script>
+    <!-- Evita o flash -->
+    <script>
+        try {
+            const temax = localStorage.getItem('tema');
+            if (temax === 'dark') {
+                document.documentElement.dataset.theme = 'dark';
+            }
+        } catch (e) {
+            console.error('Erro ao acessar o localStorage:', e);
+        }
+    </script>
+
+    <link rel="stylesheet" href="../css/globals.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+</head>
+
+<body class="dashboard">
+    <!-- Barra do topo (só no celular/tablet) -->
+    <header class="topo">
+        <a class="logo" href="painel.html">
+            <i class="bi bi-wallet2" aria-hidden="true"></i>
+            <span class="logo-nome">FinPlan</span>
+        </a>
+        <button type="button" class="btn-icone btn-menu" id="btnAbrirMenu" aria-label="Abrir menu"
+            aria-controls="menuLateral" aria-expanded="false">
+            <i class="bi bi-list" aria-hidden="true"></i>
+        </button>
+    </header>
+
+    <div class="overlay" id="overlayMenu"></div>
+
+    <!-- Menu lateral (gaveta no celular, fixo no desktop) -->
+    <aside class="aside" id="menuLateral" aria-label="Menu principal">
+        <div class="aside-topo">
+            <div class="logo">
+                <i class="bi bi-wallet2" aria-hidden="true"></i>
+                <div class="logo-text">
+                    <span class="logo-nome">FinPlan</span>
+                    <p>Meu Norte</p>
+                </div>
+            </div>
+            <button type="button" class="btn-icone btn-menu" id="btnFecharMenu" aria-label="Fechar menu">
+                <i class="bi bi-x-lg" aria-hidden="true"></i>
+            </button>
+        </div>
+
+        <p class="aside-saudacao">
+            <span class="aside-rotulo">Bem-vindo(a)</span>
+            <strong id="nomeUsuario">Dev</strong>
+        </p>
+
+        <nav class="aside-nav" aria-label="Páginas">
+            <a class="nav-link" href="perfil.html">
+                <i class="bi bi-person" aria-hidden="true"></i><span>Perfil</span>
+            </a>
+            <a class="nav-link" href="painel.html">
+                <i class="bi bi-grid-1x2" aria-hidden="true"></i><span>Painel</span>
+            </a>
+            <a class="nav-link" href="transacoes.html">
+                <i class="bi bi-wallet" aria-hidden="true"></i><span>Transações</span>
+            </a>
+            <a class="nav-link" href="relatorios.html" aria-current="page">
+                <i class="bi bi-bar-chart" aria-hidden="true"></i><span>Relatórios</span>
+            </a>
+            <a class="nav-link" href="orcamentos.html">
+                <i class="bi bi-piggy-bank" aria-hidden="true"></i><span>Orçamentos</span>
+            </a>
+        </nav>
+
+        <div class="aside-rodape">
+            <button type="button" class="nav-link" id="btnTema">
+                <i class="bi bi-moon mostra-no-claro" aria-hidden="true"></i>
+                <i class="bi bi-sun mostra-no-escuro" aria-hidden="true"></i>
+                <span class="mostra-no-claro">Tema escuro</span>
+                <span class="mostra-no-escuro">Tema claro</span>
+            </button>
+            <button type="button" class="nav-link nav-link-sair" id="btnSair">
+                <i class="bi bi-box-arrow-left" aria-hidden="true"></i><span>Sair do sistema</span>
+            </button>
+        </div>
+    </aside>
+
+    <main class="conteudo" id="conteudo">
+        <header class="pagina-cabecalho com-divisor">
+            <div>
+                <h1>Relatórios</h1>
+                <p class="pagina-sub">Tendências e comparativos das suas finanças.</p>
+            </div>
+            <button type="button" class="btn" id="btnExportarCsv">
+                <i class="bi bi-download" aria-hidden="true"></i><span>Exportar CSV</span>
+            </button>
+        </header>
+
+        <section class="card painel" aria-labelledby="tituloFluxo">
+            <h2 id="tituloFluxo">Tendências de Fluxo</h2>
+            <p class="painel-sub">Receitas, despesas e economias ao longo do tempo</p>
+            <div class="painel-corpo grafico">
+                <div id="graficoFluxo" role="img"
+                    aria-label="Gráfico de linhas com receitas, despesas e economia por mês"></div>
+            </div>
+        </section>
+
+        <section class="card painel" aria-labelledby="tituloComparativo">
+            <h2 id="tituloComparativo">Comparativo Mensal</h2>
+            <p class="painel-sub">Receita versus despesa por mês</p>
+            <div class="painel-corpo grafico">
+                <div id="graficoComparativo" role="img" aria-label="Gráfico de barras com receita e despesa por mês">
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+
+</html>

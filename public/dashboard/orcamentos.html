@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../../src/app/favicon.ico">
+    <title>Orçamentos - FinPlan</title>
+    <script defer src="../js/main.js"></script>
+    <script type="module" src="../js/orcamentos.js"></script>
+    <script type="module" src="../js/dashboard.js"></script>
+    <!-- Evita o flash -->
+    <script>
+        try {
+            const temax = localStorage.getItem('tema');
+            if (temax === 'dark') {
+                document.documentElement.dataset.theme = 'dark';
+            }
+        } catch (e) {
+            console.error('Erro ao acessar o localStorage:', e);
+        }
+    </script>
+
+    <link rel="stylesheet" href="../css/globals.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+</head>
+
+<body class="dashboard">
+    <!-- Barra do topo (só no celular/tablet) -->
+    <header class="topo">
+        <a class="logo" href="painel.html">
+            <i class="bi bi-wallet2" aria-hidden="true"></i>
+            <span class="logo-nome">FinPlan</span>
+        </a>
+        <button type="button" class="btn-icone btn-menu" id="btnAbrirMenu" aria-label="Abrir menu"
+            aria-controls="menuLateral" aria-expanded="false">
+            <i class="bi bi-list" aria-hidden="true"></i>
+        </button>
+    </header>
+
+    <div class="overlay" id="overlayMenu"></div>
+
+    <!-- Menu lateral (gaveta no celular, fixo no desktop) -->
+    <aside class="aside" id="menuLateral" aria-label="Menu principal">
+        <div class="aside-topo">
+            <div class="logo">
+                <i class="bi bi-wallet2" aria-hidden="true"></i>
+                <div class="logo-text">
+                    <span class="logo-nome">FinPlan</span>
+                    <p>Meu Norte</p>
+                </div>
+            </div>
+            <button type="button" class="btn-icone btn-menu" id="btnFecharMenu" aria-label="Fechar menu">
+                <i class="bi bi-x-lg" aria-hidden="true"></i>
+            </button>
+        </div>
+
+        <p class="aside-saudacao">
+            <span class="aside-rotulo">Bem-vindo(a)</span>
+            <strong id="nomeUsuario">Dev</strong>
+        </p>
+
+        <nav class="aside-nav" aria-label="Páginas">
+            <a class="nav-link" href="perfil.html">
+                <i class="bi bi-person" aria-hidden="true"></i><span>Perfil</span>
+            </a>
+            <a class="nav-link" href="painel.html">
+                <i class="bi bi-grid-1x2" aria-hidden="true"></i><span>Painel</span>
+            </a>
+            <a class="nav-link" href="transacoes.html">
+                <i class="bi bi-wallet" aria-hidden="true"></i><span>Transações</span>
+            </a>
+            <a class="nav-link" href="relatorios.html">
+                <i class="bi bi-bar-chart" aria-hidden="true"></i><span>Relatórios</span>
+            </a>
+            <a class="nav-link" href="orcamentos.html" aria-current="page">
+                <i class="bi bi-piggy-bank" aria-hidden="true"></i><span>Orçamentos</span>
+            </a>
+        </nav>
+
+        <div class="aside-rodape">
+            <button type="button" class="nav-link" id="btnTema">
+                <i class="bi bi-moon mostra-no-claro" aria-hidden="true"></i>
+                <i class="bi bi-sun mostra-no-escuro" aria-hidden="true"></i>
+                <span class="mostra-no-claro">Tema escuro</span>
+                <span class="mostra-no-escuro">Tema claro</span>
+            </button>
+            <button type="button" class="nav-link nav-link-sair" id="btnSair">
+                <i class="bi bi-box-arrow-left" aria-hidden="true"></i><span>Sair do sistema</span>
+            </button>
+        </div>
+    </aside>
+
+    <main class="conteudo" id="conteudo">
+        <header class="pagina-cabecalho com-divisor">
+            <div>
+                <h1>Orçamentos</h1>
+                <p class="pagina-sub">Defina limites de gastos por categoria e mês.</p>
+            </div>
+            <button type="button" class="btn btn-primario" id="btnNovoOrcamento">
+                <i class="bi bi-plus-lg" aria-hidden="true"></i><span>Novo Orçamento</span>
+            </button>
+        </header>
+
+        <section class="orcamentos" id="listaOrcamentos" aria-label="Orçamentos">
+            <!-- Exemplo: o JS gera um card por orçamento (estado-ok, estado-alerta ou estado-estourado) -->
+            <article class="card orcamento estado-ok">
+                <div class="orcamento-topo">
+                    <span class="card-icone"><i class="bi bi-check-circle" aria-hidden="true"></i></span>
+                    <div class="orcamento-info">
+                        <h2>freelance <span class="selo">Dentro do limite</span></h2>
+                        <p>Out/2026 · Orçamento mensal</p>
+                    </div>
+                    <button type="button" class="btn-icone btn-sem-borda btn-excluir"
+                        aria-label="Excluir orçamento freelance">
+                        <i class="bi bi-trash" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <div class="orcamento-valores">
+                    <p><strong>R$ 4.000,00</strong> / R$ 10.000,00</p>
+                    <p>40% usado</p>
+                </div>
+                <div class="progresso" role="progressbar" aria-label="Uso do orçamento freelance" aria-valuemin="0"
+                    aria-valuemax="100" aria-valuenow="40">
+                    <div class="progresso-barra" style="--uso: 40%"></div>
+                </div>
+            </article>
+        </section>
+        <p class="vazio" id="vazioOrcamentos" hidden>Nenhum orçamento definido. Use “Novo Orçamento” para criar o
+            primeiro.</p>
+
+        <dialog class="modal" id="modalOrcamento" aria-labelledby="tituloModalOrcamento">
+            <div class="modal-topo">
+                <div>
+                    <h2 id="tituloModalOrcamento">Novo Orçamento</h2>
+                    <p>Defina um limite de gastos por categoria e mês.</p>
+                </div>
+                <button type="button" class="btn-icone btn-sem-borda" id="btnFecharModalOrcamento" aria-label="Fechar">
+                    <i class="bi bi-x-lg" aria-hidden="true"></i>
+                </button>
+            </div>
+            <form class="modal-form" id="formOrcamento" method="dialog">
+                <div class="form-group">
+                    <label for="selCategoriaOrcamento">Categoria</label>
+                    <select id="selCategoriaOrcamento" name="categoria" required>
+                        <option value="">Selecione…</option>
+                    </select>
+                </div>
+                <div class="linha-2">
+                    <div class="form-group">
+                        <label for="selMesOrcamento">Mês</label>
+                        <select id="selMesOrcamento" name="mes" required>
+                            <option value="1">Janeiro</option>
+                            <option value="2">Fevereiro</option>
+                            <option value="3">Março</option>
+                            <option value="4">Abril</option>
+                            <option value="5">Maio</option>
+                            <option value="6">Junho</option>
+                            <option value="7">Julho</option>
+                            <option value="8">Agosto</option>
+                            <option value="9">Setembro</option>
+                            <option value="10" selected>Outubro</option>
+                            <option value="11">Novembro</option>
+                            <option value="12">Dezembro</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="inpAnoOrcamento">Ano</label>
+                        <input type="number" id="inpAnoOrcamento" name="ano" value="2026" min="2000" max="2100"
+                            required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="inpLimiteOrcamento">Limite (R$)</label>
+                    <input type="text" inputmode="decimal" id="inpLimiteOrcamento" name="limite" placeholder="0,00"
+                        required>
+                </div>
+                <div class="modal-acoes">
+                    <button type="button" class="btn" id="btnCancelarOrcamento">Cancelar</button>
+                    <button type="submit" class="btn btn-primario">Salvar Orçamento</button>
+                </div>
+            </form>
+        </dialog>
+    </main>
+</body>
+
+</html>
