@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../img/favicon.ico">
+    <title>Perfil - FinPlan</title>
+    <script defer src="../js/main.js"></script>
+    <script type="module" src="../js/dashboard.js"></script>
+    <script type="module" src="../js/perfil.js"></script>
+    <!-- Evita o flash -->
+    <script>
+        try {
+            const temax = localStorage.getItem('tema');
+            if (temax === 'dark') {
+                document.documentElement.dataset.theme = 'dark';
+            }
+        } catch (e) {
+            console.error('Erro ao acessar o localStorage:', e);
+        }
+    </script>
+
+    <link rel="stylesheet" href="../css/globals.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+</head>
+
+<body class="dashboard">
+    <header class="topo">
+        <a class="logo" href="painel.html">
+            <i class="bi bi-wallet2" aria-hidden="true"></i>
+            <span class="logo-nome">FinPlan</span>
+        </a>
+        <button type="button" class="btn-icone btn-menu" id="btnAbrirMenu" aria-label="Abrir menu"
+            aria-controls="menuLateral" aria-expanded="false">
+            <i class="bi bi-list" aria-hidden="true"></i>
+        </button>
+    </header>
+
+    <div class="overlay" id="overlayMenu"></div>
+
+    <aside class="aside" id="menuLateral" aria-label="Menu principal">
+        <div class="aside-topo">
+            <div class="logo">
+                <i class="bi bi-wallet2" aria-hidden="true"></i>
+                <div class="logo-text">
+                    <span class="logo-nome">FinPlan</span>
+                    <p>Meu Norte</p>
+                </div>
+            </div>
+            <button type="button" class="btn-icone btn-menu" id="btnFecharMenu" aria-label="Fechar menu">
+                <i class="bi bi-x-lg" aria-hidden="true"></i>
+            </button>
+        </div>
+
+        <p class="aside-saudacao">
+            <span class="aside-rotulo">Bem-vindo(a)</span>
+            <strong id="nomeUsuario">Dev</strong>
+        </p>
+
+        <nav class="aside-nav" aria-label="Páginas">
+            <a class="nav-link" href="perfil.html" aria-current="page">
+                <i class="bi bi-person" aria-hidden="true"></i><span>Perfil</span>
+            </a>
+            <a class="nav-link" href="painel.html">
+                <i class="bi bi-grid-1x2" aria-hidden="true"></i><span>Painel</span>
+            </a>
+            <a class="nav-link" href="transacoes.html">
+                <i class="bi bi-wallet" aria-hidden="true"></i><span>Transações</span>
+            </a>
+            <a class="nav-link" href="relatorios.html">
+                <i class="bi bi-bar-chart" aria-hidden="true"></i><span>Relatórios</span>
+            </a>
+            <a class="nav-link" href="orcamentos.html">
+                <i class="bi bi-piggy-bank" aria-hidden="true"></i><span>Orçamentos</span>
+            </a>
+        </nav>
+
+        <div class="aside-rodape">
+            <button type="button" class="nav-link" id="btnTema">
+                <i class="bi bi-moon mostra-no-claro" aria-hidden="true"></i>
+                <i class="bi bi-sun mostra-no-escuro" aria-hidden="true"></i>
+                <span class="mostra-no-claro">Tema escuro</span>
+                <span class="mostra-no-escuro">Tema claro</span>
+            </button>
+            <button type="button" class="nav-link nav-link-sair" id="btnSair">
+                <i class="bi bi-box-arrow-left" aria-hidden="true"></i><span>Sair do sistema</span>
+            </button>
+        </div>
+    </aside>
+
+    <main class="conteudo" id="conteudo">
+        <header class="pagina-cabecalho com-divisor">
+            <div>
+                <h1>Perfil</h1>
+                <p class="pagina-sub">Gerencie as suas informações pessoais.</p>
+            </div>
+            <!-- o JS troca o texto/ícone para "Salvar" depois que o código for confirmado -->
+            <button type="button" class="btn btn-primario" id="btnEditar">
+                <i class="bi bi-pencil-square" id="icoEditar" aria-hidden="true"></i>
+                <span id="lblEditar">Habilitar edição</span>
+            </button>
+        </header>
+
+        <form class="perfil-form" id="alterarDados">
+            <!-- tudo começa desabilitado: o JS remove o disabled quando o código for válido -->
+            <div class="foto-perfil">
+                <input class="sr-only" type="file" id="fotoInput" name="foto" accept="image/*" disabled>
+                <label for="fotoInput" class="foto-label">
+                    <img id="fotoPreview" class="foto-preview" alt="Foto de perfil">
+                    <span class="foto-placeholder-text">Clique para adicionar a sua foto</span>
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label for="userNome">Nome:</label>
+                <input type="text" id="userNome" name="nome" autocomplete="name" disabled required>
+            </div>
+            <div class="form-group">
+                <label for="userMail">Email:</label>
+                <input type="email" id="userMail" name="email" autocomplete="email" disabled required>
+            </div>
+            <div class="form-group">
+                <label for="userSenha">Nova senha:</label>
+                <input type="password" id="userSenha" name="senha" autocomplete="new-password" disabled>
+                <p>Deixe em branco para manter a senha atual.</p>
+            </div>
+
+            <div class="form-acoes">
+                <button type="submit" class="btn btn-primario" id="btnConfirmar" disabled>Confirmar mudanças</button>
+            </div>
+        </form>
+
+        <dialog class="modal modal-estreito" id="modalCodigo" aria-labelledby="tituloModalCodigo">
+            <div class="modal-topo">
+                <div>
+                    <h2 id="tituloModalCodigo">Verificação</h2>
+                    <p>Código enviado no email</p>
+                </div>
+                <button type="button" class="btn-icone btn-sem-borda" id="btnFecharModalCodigo" aria-label="Fechar">
+                    <i class="bi bi-x-lg" aria-hidden="true"></i>
+                </button>
+            </div>
+            <form class="modal-form" id="formCodigo" method="dialog">
+                <div class="form-group">
+                    <label for="inpCodigo">Código:</label>
+                    <input type="text" id="inpCodigo" name="codigo" inputmode="numeric" autocomplete="one-time-code"
+                        maxlength="6" required>
+                </div>
+                <p class="mensagem mensagem-erro" id="erroCodigo" role="alert" hidden>Código inválido. Tente novamente.</p>
+                <div class="modal-acoes">
+                    <button type="button" class="btn" id="btnCancelarCodigo">Cancelar</button>
+                    <button type="submit" class="btn btn-primario">Confirmar</button>
+                </div>
+            </form>
+        </dialog>
+    </main>
+</body>
+
+</html>

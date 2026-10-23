@@ -1,34 +1,802 @@
-* {
-  margin: 0;
+/* DASHBOARD: layout das telas internas (carregar depois do globals.css) */
+
+/* ===== MOBILE (base) ===== */
+
+/* barra do topo */
+.topo {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: var(--surface);
+  border-bottom: 1px solid var(--borda);
+}
+
+.topo .logo,
+.aside .logo {
+  justify-content: flex-start;
+  color: var(--texto);
+  text-decoration: none;
+}
+
+.logo-nome {
+  font-family: var(--fonte-titulo);
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+/* botões quadrados com ícone (menu, ocultar valores) */
+.btn-icone {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 2.75rem;
+  height: 2.75rem;
+  font-size: 1.25rem;
+  background: none;
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  cursor: pointer;
+}
+
+.btn-menu {
+  border: 0;
+}
+
+/* fundo escuro atrás do menu aberto */
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgb(0 0 0 / 0.5);
+}
+
+.overlay.visivel {
+  display: block;
+}
+
+/* menu lateral: gaveta escondida à esquerda */
+.aside {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 50;
+  width: min(18rem, 85vw);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1rem;
+  overflow-y: auto;
+  background: var(--surface);
+  border-right: 1px solid var(--borda);
+  transform: translateX(-100%);
+  visibility: hidden;
+  transition: transform 0.3s, visibility 0.3s;
+}
+
+.aside.aberto {
+  transform: none;
+  visibility: visible;
+}
+
+.aside-topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.aside .logo-text {
+  align-items: flex-start;
+}
+
+.aside-saudacao {
+  display: grid;
+}
+
+.aside-rotulo {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.aside-nav,
+.aside-rodape {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.aside-rodape {
+  margin-top: auto;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.625rem 0.75rem;
+  min-height: 2.75rem;
+  background: none;
+  border: 0;
+  border-radius: var(--raio);
+  color: var(--texto);
+  font-weight: 500;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.nav-link i {
+  font-size: 1.1rem;
+}
+
+.nav-link[aria-current="page"] {
+  background: var(--acento);
+  color: var(--acento-texto);
+}
+
+.nav-link-sair {
+  color: var(--erro);
+}
+
+/* conteúdo */
+.conteudo {
+  display: grid;
+  gap: 1.5rem;
+  align-content: start;
+  min-width: 0;
+  padding: 1rem;
+}
+
+/* o header global é flex com borda: aqui vira um bloco simples */
+.pagina-cabecalho {
+  display: grid;
+  gap: 0.75rem;
+  justify-content: normal;
+  justify-items: start;
+  align-items: start;
   padding: 0;
-  box-sizing: border-box;
+  border: 0;
 }
 
-html, body {
+.pagina-cabecalho h1 {
+  font-family: var(--fonte-titulo);
+  font-size: 1.75rem;
+  line-height: 1.2;
+}
+
+.pagina-sub,
+.painel-sub,
+.card-rotulo,
+.card-nota {
+  color: var(--muted);
+}
+
+/* cartões */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--borda);
+  border-radius: calc(var(--raio) * 2);
+}
+
+.cards,
+.paineis {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.card-resumo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem;
+}
+
+.card-icone {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 3rem;
+  height: 3rem;
+  font-size: 1.25rem;
+  border-radius: 50%;
+}
+
+.icone-receita,
+.icone-saldo {
+  color: var(--sucesso);
+  background: color-mix(in srgb, var(--sucesso) 15%, transparent);
+}
+
+.icone-despesa {
+  color: var(--erro);
+  background: color-mix(in srgb, var(--erro) 15%, transparent);
+}
+
+.icone-economia {
+  color: var(--info);
+  background: color-mix(in srgb, var(--info) 15%, transparent);
+}
+
+.card-rotulo {
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+}
+
+.card-valor {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+
+.valor-receita {
+  color: var(--sucesso);
+}
+
+.valor-despesa {
+  color: var(--erro);
+}
+
+.card-nota {
+  font-size: 0.8125rem;
+}
+
+/* painéis (gráficos e atividades) */
+.painel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1.25rem;
+}
+
+.painel h2 {
+  font-family: var(--fonte-titulo);
+  font-size: 1.125rem;
+}
+
+.painel-corpo {
+  position: relative;
+  flex: 1;
+  display: grid;
+  place-items: center;
+  min-height: 14rem;
+  margin-top: 0.75rem;
+  color: var(--muted);
+  width: 100%;
+    height: 350px;
+    min-width: 0;
+}
+
+/* ===== TELAS MAIORES ===== */
+
+@media (hover: hover) {
+
+  .nav-link:hover:not([aria-current="page"]),
+  .btn-icone:hover {
+    background: var(--fundo-suave);
+  }
+}
+
+@media (min-width: 640px) {
+  .cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* desktop: menu fixo à esquerda e conteúdo ao lado */
+@media (min-width: 1024px) {
+  body.dashboard {
+    display: grid;
+    grid-template-columns: 17.5rem minmax(0, 1fr);
+  }
+
+  .topo,
+  .overlay,
+  .aside-topo .btn-menu {
+    display: none;
+  }
+
+  .aside {
+    position: sticky;
+    top: 0;
+    align-self: start;
+    z-index: auto;
+    width: auto;
+    height: 100dvh;
+    transform: none;
+    visibility: visible;
+    transition: none;
+  }
+
+  .conteudo {
+    padding: 2.5rem;
+  }
+
+  .pagina-cabecalho {
+    grid-template-columns: 1fr auto;
+  }
+
+  .cards {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .paineis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .painel-largo {
+    grid-column: 1 / -1;
+  }
+
+  .painel-corpo {
+    min-height: 20rem;
+  }
+}
+
+/* ===== TELAS INTERNAS: transações, orçamentos, relatórios ===== */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* divisórias do menu lateral */
+.aside {
+  gap: 1rem;
+}
+
+.aside-topo,
+.aside-saudacao {
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--borda);
+}
+
+.aside-rodape {
+  padding-top: 1rem;
+  border-top: 1px solid var(--borda);
+}
+
+/* cabeçalho com linha embaixo e botão de ação */
+.pagina-cabecalho.com-divisor {
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--borda);
+}
+
+/* botões */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding: 0 1rem;
+  background: none;
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.btn-primario {
+  background: var(--acento);
+  border-color: var(--acento);
+  color: var(--acento-texto);
+}
+
+.btn-sem-borda {
+  border: 0;
+  color: var(--muted);
+}
+
+.vazio {
+  padding: 2rem 1rem;
+  text-align: center;
+  color: var(--muted);
+}
+
+/* campos */
+select {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.5rem 0.75rem;
+  font: inherit;
+  color: inherit;
+  background-color: var(--bg);
+  border: 1px solid var(--borda-input);
+  border-radius: var(--raio);
+}
+
+select:focus-visible {
+  border-color: var(--foco);
+}
+
+.filtros {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.busca {
+  position: relative;
+}
+
+.busca i {
+  position: absolute;
+  top: 50%;
+  left: 0.75rem;
+  transform: translateY(-50%);
+  color: var(--muted);
+  pointer-events: none;
+}
+
+.busca input {
+  padding-left: 2.5rem;
+}
+
+/* lista de transações */
+.lista {
+  list-style: none;
+  overflow: hidden;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+}
+
+.item+.item {
+  border-top: 1px solid var(--borda);
+}
+
+.item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.item-info strong {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.item-info small {
+  color: var(--muted);
+}
+
+.item-valor {
+  font-weight: 700;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* orçamentos */
+.orcamentos {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.orcamento {
+  --cor-estado: var(--sucesso);
+  display: grid;
+  gap: 1rem;
+  padding: 1.25rem;
+}
+
+.estado-alerta {
+  --cor-estado: var(--aviso);
+}
+
+.estado-estourado {
+  --cor-estado: var(--erro);
+}
+
+.orcamento .card-icone,
+.selo {
+  color: var(--cor-estado);
+  background: color-mix(in srgb, var(--cor-estado) 15%, transparent);
+}
+
+.orcamento-topo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.orcamento-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.orcamento-info h2 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.0625rem;
+}
+
+.orcamento-info p {
+  font-size: 0.8125rem;
+  color: var(--muted);
+}
+
+.selo {
+  padding: 0.0625rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-radius: 999px;
+}
+
+.orcamento-valores {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.orcamento-valores strong {
+  color: var(--texto);
+}
+
+.progresso {
+  height: 0.5rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--fundo-suave);
+}
+
+.progresso-barra {
+  width: min(var(--uso, 0%), 100%);
   height: 100%;
-  font-family: Arial, Helvetica, sans-serif;
+  border-radius: inherit;
+  background: var(--cor-estado);
 }
 
-.dashboard-container {
-  height: 100vh;
+/* janelas (dialog) */
+.modal {
+  width: min(40rem, calc(100vw - 2rem));
+  max-height: calc(100dvh - 2rem);
+  margin: auto;
+  padding: 0;
+  color: var(--texto);
+  background: var(--surface);
+  border: 1px solid var(--borda);
+  border-radius: calc(var(--raio) * 2);
+}
+
+.modal::backdrop {
+  background: rgb(0 0 0 / 0.6);
+}
+
+.modal-topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--borda);
+}
+
+.modal-topo h2 {
+  font-family: var(--fonte-titulo);
+  font-size: 1.125rem;
+}
+
+.modal-topo p {
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+
+.modal-form {
+  display: grid;
+  gap: 1rem;
+  padding: 1.5rem;
+}
+
+.modal .form-group {
+  gap: 0.375rem;
+  width: 100%;
+}
+
+.linha-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.modal-acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+/* alternador Receita / Despesa */
+.segmento {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  background: var(--fundo-suave);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+}
+
+.segmento-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.5rem;
+  background: none;
+  border: 0;
+  border-radius: var(--raio);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.segmento-receita[aria-pressed="true"] {
+  background: var(--sucesso);
+  color: var(--acento-texto);
+}
+
+.segmento-despesa[aria-pressed="true"] {
+  background: var(--erro);
+  color: var(--acento-texto);
+}
+
+/* gráficos (o ECharts precisa de um contêiner com altura definida) */
+.painel-corpo.grafico {
+  display: block;
+  height: 18rem;
+}
+
+@media (hover: hover) {
+
+  .btn:hover:not(.btn-primario),
+  .segmento-btn:hover:not([aria-pressed="true"]) {
+    background: var(--fundo-suave);
+  }
+
+  .btn-primario:hover {
+    background: var(--destaque);
+    color: var(--destaque-texto);
+  }
+}
+
+@media (min-width: 640px) {
+  .orcamentos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .orcamentos {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .filtros {
+    grid-template-columns: 1fr 12rem 15rem;
+  }
+
+  .painel-corpo.grafico {
+    height: 22rem;
+  }
+}
+
+/* painel: gráficos e lista criados pelo JS dentro de .painel-corpo */
+.painel-corpo:has(.grafico-area, .lista) {
+  display: block;
+}
+
+
+/* área de desenho do ECharts (precisa de altura definida) */
+.grafico-area {
+  width: 100%;
+  height: 18rem;
+}
+
+.painel-corpo.grafico>div {
+  width: 100%;
+  height: 100%;
+}
+
+@media (min-width: 1024px) {
+  .grafico-area {
+    height: 20rem;
+  }
+}
+/* ===== PERFIL ===== */
+
+.perfil-form {
+  display: grid;
+  gap: 1rem;
+  width: 100%;
+  max-width: 80%;
+  margin-inline: auto;
+}
+
+.perfil-form .form-group {
+  gap: 0.375rem;
+}
+
+/* foto centralizada: o input fica escondido e o label faz o papel de botão */
+.foto-perfil {
+  display: flex;
+  justify-content: center;
+}
+
+.foto-label {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 24px;
-  background: linear-gradient(135deg, #3a3a3a, #1a1a1a);
-  color: #f0f0f0;
-}
-
-.btn {
+  width: 20rem;
+  height: 20rem;
+  overflow: hidden;
+  border: 2px dashed var(--borda-input);
+  border-radius: 50%;
+  text-align: center;
   cursor: pointer;
-  border: none;
-  border-radius: 4px;
-  padding: 12px 24px;
-  font-size: 1rem;
 }
 
-.btn-logout {
-  background-color: #c0392b;
-  color: #fff;
+.foto-preview {
+  display: none;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.foto-preview.has-image {
+  display: block;
+}
+
+.foto-placeholder-text {
+  padding: 1rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.foto-preview.has-image + .foto-placeholder-text {
+  display: none;
+}
+
+/* edição bloqueada: o input desabilitado não abre o explorador de arquivos */
+.foto-perfil input:disabled + .foto-label {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.foto-perfil input:focus-visible + .foto-label {
+  outline: 2px solid var(--foco);
+  outline-offset: 2px;
+}
+
+.form-acoes {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.modal-estreito {
+  width: min(26rem, calc(100vw - 2rem));
 }
