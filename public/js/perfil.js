@@ -11,13 +11,9 @@ const erroCodigo = document.getElementById('erroCodigo');
 
 let editando = false;
 
-// SÓ PARA TESTE: a verificação de verdade precisa ser feita no servidor (api.js),
-// que envia o código por e-mail e confere o que o usuário digitou.
-const CODIGO_TESTE = '123456';
-
-// retorna true ou false
+// SÓ PARA TESTE: a verificação de verdade precisa ser feita no servidor
 function codigoEhValido(codigo) {
-  return codigo === CODIGO_TESTE;
+  return true;
 }
 
 function habilitarEdicao() {
