@@ -3,6 +3,7 @@
 Necessario servidor para funcionamento correto do front ao executar os modulos scripts, pode usar node ou se preferir outro servidor web:
 
 npm install
+
 npm run dev
 
 Sistema web finaceiro criado utilizando apenas html, css, js no front, baseaado no sistema dos seguinte repositorio:
