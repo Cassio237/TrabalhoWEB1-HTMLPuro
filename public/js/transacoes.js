@@ -1,4 +1,4 @@
-import { CATEGORIAS, configurarModal, converterValor, dataDeHoje, idUnico, itemTransacao, lerDados, preencherSelect, salvarDados } from './utils.js';
+import { CATEGORIAS, configurarModal, converterValor, dataDeHoje, idUnico, itemTransacao, lerDados, preencherSelect, salvarDados } from './modules/utils.js';
 
 let transacoes = lerDados('transacoes');
 let tipoAtual = 'despesa';

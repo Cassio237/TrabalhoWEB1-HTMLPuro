@@ -1,4 +1,4 @@
-import { MESES, corCss, criarGrafico, estiloEixos, formatarMoeda, formatarMoedaCompacta, lerDados, totaisPorMes } from './utils.js';
+import { MESES, corCss, criarGrafico, estiloEixos, formatarMoeda, formatarMoedaCompacta, lerDados, totaisPorMes } from './modules/utils.js';
 
 const transacoes = lerDados('transacoes');
 const ano = new Date().getFullYear();

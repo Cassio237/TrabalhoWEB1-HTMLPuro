@@ -15,19 +15,44 @@ botoesToggle.forEach((botao) => {
 
 
 
-formRegistro.addEventListener('submit', (event) => {
+formRegistro.addEventListener('submit', async (event) => {
   event.preventDefault();
 
-  const inputNome = document.getElementById('nome');
-  const inputEmail = document.getElementById('email');
-  const inputSenha = document.getElementById('senha');
-  const inputConfirmarSenha = document.getElementById('confirmarSenha');
-  const mensagen = document.getElementById('msgFeedback');
+  const mensagem = document.getElementById('msgFeedback');
+  const name = document.getElementById('nomeCriar').value.trim();
+  const email = document.getElementById('emailCriar').value.trim();
+  const password = document.getElementById('senhaCriar').value;
+  const confirmarSenha = document.getElementById('confirmarSenhaCriar').value;
 
-  mensagen.innerText = "";
+  mensagem.innerText = '';
 
-  //if(inp)
+  if (password !== confirmarSenha) {
+    mensagem.innerText = 'As senhas não coincidem.';
+    return;
+  }
+
+  if (password.length < 6) {
+    mensagem.innerText = 'A senha deve ter ao menos 6 caracteres.';
+    return;
+}
+
+  try {
+    const resp = await fetch('/api/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, password }),
+    });
+    const json = await resp.json();
 
 
-  window.location.href = 'index.html';
+    if (!resp.ok) {
+      mensagem.innerText = json.message;
+      return;
+    }
+
+    mensagem.innerText = 'Conta criada com sucesso! Redirecionando para o login...';
+    setTimeout(() => { window.location.href = 'index.html'; }, 1500);
+  } catch (err) {
+    mensagem.innerText = 'Não foi possível conectar ao servidor.';
+  }
 });
