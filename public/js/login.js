@@ -8,10 +8,32 @@ botaoTglSenha.addEventListener('click', () => {
     icone.className = tipo === 'password' ? 'bi bi-eye-fill' : 'bi bi-eye-slash-fill';
 });
 
-const formLogin = document.getElementById('formLogin');
-formLogin.addEventListener('submit', (event) => {
+formLogin.addEventListener('submit', async (event) => {
     event.preventDefault();
-    window.location.href = 'dashboard/painel.html';
+    const msgLogin = document.getElementById('msgFeedback');
+
+    msgLogin.textContent = '';
+
+    const email = document.getElementById('emailEntrada').value.trim();
+    const password = document.getElementById('senhaEntrada').value;
+
+    try {
+        const resp = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password }),
+        });
+        const json = await resp.json();
+
+        if (!resp.ok) {
+            msgLogin.textContent = json.message;
+            return;
+        }
+
+        window.location.href = 'dashboard/painel.html';
+    } catch (err) {
+        msgLogin.textContent = 'Não foi possível conectar ao servidor.';
+    }
 });
 
 // autofocus, evita tela mobile
