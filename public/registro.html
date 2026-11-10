@@ -55,12 +55,14 @@
             </div>
             <div class="form-group">
                 <label for="emailCriar">Email:</label>
-                <input type="email" id="emailCriar" name="email" autocomplete="email" required>
+                <input type="email" id="emailCriar" name="email" autocomplete="email" required
+                    pattern="[^\s@]+@[^\s@]+\.[^\s@]+" title="Informe um e-mail válido, por exemplo nome@dominio.com">
             </div>
             <div class="form-group">
                 <label for="senhaCriar">Senha:</label>
                 <div class="senha-container">
-                    <input class="senha" type="password" id="senhaCriar" name="senha" autocomplete="new-password" required>
+                    <input class="senha" type="password" id="senhaCriar" name="senha" autocomplete="new-password"
+                        required>
                     <button class="btn-toggle-senha" type="button" id="btnToggleSenha" aria-label="Mostrar senha">
                         <i class="bi bi-eye-fill" aria-hidden="true"></i>
                     </button>
@@ -81,7 +83,7 @@
             <button type="submit">Criar Conta</button>
             <p>Já tem uma conta? <a href="index.html">Entrar</a></p>
 
-            <p id="msgFeedback"></p>
+            <p class="mensagem" id="msgFeedback" role="status" hidden></p>
         </form>
 
     </main>

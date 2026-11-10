@@ -53,7 +53,8 @@
             <p>Entre para continuar acompanhando suas finanças.</p>
             <div class="form-group">
                 <label for="emailEntrada">Email:</label>
-                <input type="email" id="emailEntrada" name="email" autocomplete="email" required>
+                <input type="email" id="emailEntrada" name="email" autocomplete="email" required
+                    pattern="[^\s@]+@[^\s@]+\.[^\s@]+" title="Informe um e-mail válido, por exemplo nome@dominio.com">
             </div>
             <div class="form-group">
                 <label for="senhaEntrada">Senha:</label>
@@ -73,7 +74,8 @@
             </div>
             <button type="submit">Entrar</button>
             <p>Não tem uma conta? <a href="registro.html">Criar Conta</a></p>
-            <p id="msgFeedback"></p>
+
+            <p class="mensagem" id="msgFeedback" role="status" hidden></p>
         </form>
 
         <dialog class="modal modal-estreito" id="modalRecuperar" aria-labelledby="tituloModalRecuperar">

@@ -8,11 +8,15 @@ botaoTglSenha.addEventListener('click', () => {
     icone.className = tipo === 'password' ? 'bi bi-eye-fill' : 'bi bi-eye-slash-fill';
 });
 
+function mostrarMensagem(elemento, texto, sucesso = false) {
+  elemento.textContent = texto;
+  elemento.className = `mensagem ${sucesso ? 'mensagem-sucesso' : 'mensagem-erro'}`;
+  elemento.hidden = false;
+}
+
 formLogin.addEventListener('submit', async (event) => {
     event.preventDefault();
     const msgLogin = document.getElementById('msgFeedback');
-
-    msgLogin.textContent = '';
 
     const email = document.getElementById('emailEntrada').value.trim();
     const password = document.getElementById('senhaEntrada').value;
@@ -26,7 +30,7 @@ formLogin.addEventListener('submit', async (event) => {
         const json = await resp.json();
 
         if (!resp.ok) {
-            msgLogin.textContent = json.message;
+            mostrarMensagem(msgLogin, json.message, false);
             return;
         }
 
