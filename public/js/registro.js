@@ -13,26 +13,28 @@ botoesToggle.forEach((botao) => {
   });
 });
 
-
+function mostrarMensagem(elemento, texto, sucesso = false) {
+  elemento.textContent = texto;
+  elemento.className = `mensagem ${sucesso ? 'mensagem-sucesso' : 'mensagem-erro'}`;
+  elemento.hidden = false;
+}
 
 formRegistro.addEventListener('submit', async (event) => {
   event.preventDefault();
 
-  const mensagem = document.getElementById('msgFeedback');
+  const msgRegistro = document.getElementById('msgFeedback');
   const name = document.getElementById('nomeCriar').value.trim();
   const email = document.getElementById('emailCriar').value.trim();
   const password = document.getElementById('senhaCriar').value;
   const confirmarSenha = document.getElementById('confirmarSenhaCriar').value;
 
-  mensagem.innerText = '';
-
   if (password !== confirmarSenha) {
-    mensagem.innerText = 'As senhas não coincidem.';
+    mostrarMensagem(msgRegistro, 'As senhas não coincidem.');
     return;
   }
 
   if (password.length < 6) {
-    mensagem.innerText = 'A senha deve ter ao menos 6 caracteres.';
+    mostrarMensagem(msgRegistro, 'A senha deve ter ao menos 6 caracteres.');
     return;
 }
 
@@ -46,13 +48,13 @@ formRegistro.addEventListener('submit', async (event) => {
 
 
     if (!resp.ok) {
-      mensagem.innerText = json.message;
+      msgRegistro.innerText = json.message;
       return;
     }
 
-    mensagem.innerText = 'Conta criada com sucesso! Redirecionando para o login...';
+    mostrarMensagem(msgRegistro, 'Conta criada com sucesso! Redirecionando para o login...', true);
     setTimeout(() => { window.location.href = 'index.html'; }, 1500);
   } catch (err) {
-    mensagem.innerText = 'Não foi possível conectar ao servidor.';
+    mostrarMensagem(msgRegistro, 'Não foi possível conectar ao servidor.');
   }
 });

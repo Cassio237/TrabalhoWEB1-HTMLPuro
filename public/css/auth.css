@@ -37,7 +37,7 @@ form p {
 
 #msgFeedback {
   font-weight: 700;
-  color: var(--acento);
+  border: none;
 }
 
 /* CAMPO DE SENHA COM BOTÃO DE MOSTRAR/OCULTAR */
