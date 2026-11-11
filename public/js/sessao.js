@@ -32,18 +32,25 @@ const Sessao = (() => {
     }
   }
 
-  async function redirecionarSeLogado() {
-    if (!obter()) return;
-    try {
-      const resp = await fetch('/api/me', {
-        headers: { Authorization: `Bearer ${obter()}` },
-      });
-      if (resp.ok) window.location.href = '/dashboard/painel.html';
-      else limpar(); // token expirado ou usuário inexistente: fica no login
-    } catch (err) {
-      // servidor fora do ar: fica na tela de login
+async function redirecionarSeLogado(elementoMsg, exibir) {
+  if (!obter()) return;
+  try {
+    const resp = await fetch('/api/me', {
+      headers: { Authorization: `Bearer ${obter()}` },
+    });
+    if (!resp.ok) { limpar(); return; }
+
+    const { data } = await resp.json();
+    const primeiroNome = data.usuario.nome.split(' ')[0];
+
+    if (elementoMsg && exibir) {
+      exibir(elementoMsg, `Você já está logado, ${primeiroNome}. Redirecionando...`, true);
     }
+    setTimeout(() => { window.location.href = '/dashboard/painel.html'; }, 1500);
+  } catch (err) {
+    // servidor fora do ar: fica na tela de login
   }
+}
 
   return { salvar, obter, limpar, sair, fetchAutenticado, protegerPagina, redirecionarSeLogado };
 })();

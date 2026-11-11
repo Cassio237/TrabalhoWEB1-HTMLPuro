@@ -1,3 +1,5 @@
+import { mostrarMensagem } from './modules/mensagem.js';
+
 Sessao.redirecionarSeLogado();
 
 const botoesToggle = document.querySelectorAll('.btn-toggle-senha');
@@ -14,12 +16,6 @@ botoesToggle.forEach((botao) => {
     icone.className = mostrando ? 'bi bi-eye-fill' : 'bi bi-eye-slash-fill';
   });
 });
-
-function mostrarMensagem(elemento, texto, sucesso = false) {
-  elemento.textContent = texto;
-  elemento.className = `mensagem ${sucesso ? 'mensagem-sucesso' : 'mensagem-erro'}`;
-  elemento.hidden = false;
-}
 
 formRegistro.addEventListener('submit', async (event) => {
   event.preventDefault();

@@ -1,3 +1,5 @@
+import { mostrarMensagem } from './modules/mensagem.js';
+
 Sessao.redirecionarSeLogado();
 
 const botaoTglSenha = document.getElementById('btnToggleSenha');
@@ -9,12 +11,6 @@ botaoTglSenha.addEventListener('click', () => {
     botaoTglSenha.setAttribute('aria-label', tipo === 'password' ? 'Mostrar senha' : 'Ocultar senha');
     icone.className = tipo === 'password' ? 'bi bi-eye-fill' : 'bi bi-eye-slash-fill';
 });
-
-function mostrarMensagem(elemento, texto, sucesso = false) {
-  elemento.textContent = texto;
-  elemento.className = `mensagem ${sucesso ? 'mensagem-sucesso' : 'mensagem-erro'}`;
-  elemento.hidden = false;
-}
 
 // formLogin.addEventListener('submit', async (event) => {
 //     event.preventDefault();
@@ -101,12 +97,6 @@ const EMAILS_TESTE = ['teste@email.com'];
 // retorna true ou false
 function emailExiste(email) {
     return EMAILS_TESTE.includes(email.toLowerCase());
-}
-
-function mostrarMensagemRecuperar(texto, sucesso) {
-    msgRecuperar.textContent = texto;
-    msgRecuperar.className = `mensagem ${sucesso ? 'mensagem-sucesso' : 'mensagem-erro'}`;
-    msgRecuperar.hidden = false;
 }
 
 document.getElementById('btnRecuperarSenha').addEventListener('click', () => {
