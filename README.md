@@ -1,6 +1,5 @@
 # TrabWEB1
 
-
 Necessario Node e instalar jwt para rodar local:
 
 npm install
