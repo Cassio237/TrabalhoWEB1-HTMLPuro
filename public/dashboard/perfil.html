@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="../img/favicon.ico">
     <title>Perfil - FinPlan</title>
+    <script defer src="../js/sessao.js"></script>
+    <script defer src="../js/guard.js"></script>
     <script defer src="../js/main.js"></script>
     <script type="module" src="../js/dashboard.js"></script>
     <script type="module" src="../js/perfil.js"></script>
@@ -149,7 +151,8 @@
                     <input type="text" id="inpCodigo" name="codigo" inputmode="numeric" autocomplete="one-time-code"
                         maxlength="6" required>
                 </div>
-                <p class="mensagem mensagem-erro" id="erroCodigo" role="alert" hidden>Código inválido. Tente novamente.</p>
+                <p class="mensagem mensagem-erro" id="erroCodigo" role="alert" hidden>Código inválido. Tente novamente.
+                </p>
                 <div class="modal-acoes">
                     <button type="button" class="btn" id="btnCancelarCodigo">Cancelar</button>
                     <button type="submit" class="btn btn-primario">Confirmar</button>

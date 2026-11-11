@@ -1,3 +1,5 @@
+Sessao.redirecionarSeLogado();
+
 const botoesToggle = document.querySelectorAll('.btn-toggle-senha');
 const formRegistro = document.getElementById('formRegistro');
 

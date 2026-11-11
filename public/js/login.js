@@ -1,3 +1,5 @@
+Sessao.redirecionarSeLogado();
+
 const botaoTglSenha = document.getElementById('btnToggleSenha');
 botaoTglSenha.addEventListener('click', () => {
     const inputSenha = document.getElementById('senhaEntrada');
@@ -14,9 +16,43 @@ function mostrarMensagem(elemento, texto, sucesso = false) {
   elemento.hidden = false;
 }
 
+// formLogin.addEventListener('submit', async (event) => {
+//     event.preventDefault();
+//     const msgLogin = document.getElementById('msgFeedback');
+
+//     const email = document.getElementById('emailEntrada').value.trim();
+//     const password = document.getElementById('senhaEntrada').value;
+
+//     try {
+//         const resp = await fetch('/api/login', {
+//             method: 'POST',
+//             headers: { 'Content-Type': 'application/json' },
+//             body: JSON.stringify({ email, password }),
+//         });
+//         const json = await resp.json();
+
+//         if (!resp.ok) {
+//             mostrarMensagem(msgLogin, json.message, false);
+//             return;
+//         }
+
+//         // Token de Login
+//         Sessao.salvar(json.data.token);
+//         mostrarMensagem(msgLogin, 'Login realizado! Redirecionando...', true);
+//         setTimeout(() => { window.location.href = '/dashboard/painel.html'; }, 800);
+
+//         window.location.href = 'dashboard/painel.html';
+//     } catch (err) {
+//         msgLogin.textContent = 'Não foi possível conectar ao servidor.';
+//     }
+// });
+
+const formLogin = document.getElementById('formLogin');
+const msgLogin = document.getElementById('msgFeedback'); // use o id que existe no seu index.html
+
 formLogin.addEventListener('submit', async (event) => {
     event.preventDefault();
-    const msgLogin = document.getElementById('msgFeedback');
+    msgLogin.hidden = true;
 
     const email = document.getElementById('emailEntrada').value.trim();
     const password = document.getElementById('senhaEntrada').value;
@@ -30,13 +66,17 @@ formLogin.addEventListener('submit', async (event) => {
         const json = await resp.json();
 
         if (!resp.ok) {
-            mostrarMensagem(msgLogin, json.message, false);
+            mostrarMensagem(msgLogin, json.message);
             return;
         }
 
-        window.location.href = 'dashboard/painel.html';
+        // sucesso: aqui dentro, onde o json existe
+        Sessao.salvar(json.data.token);
+        mostrarMensagem(msgLogin, 'Login realizado! Redirecionando...', true);
+        setTimeout(() => { window.location.href = '/dashboard/painel.html'; }, 800);
     } catch (err) {
-        msgLogin.textContent = 'Não foi possível conectar ao servidor.';
+        console.error(err);
+        mostrarMensagem(msgLogin, 'Não foi possível conectar ao servidor.');
     }
 });
 
@@ -48,6 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
         input.focus();
     }
 });
+
 // ----- recuperar senha -----
 const modalRecuperar = document.getElementById('modalRecuperar');
 const formRecuperar = document.getElementById('formRecuperar');
