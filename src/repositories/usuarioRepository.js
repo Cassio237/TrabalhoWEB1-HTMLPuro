@@ -35,4 +35,10 @@ async function criar({ nome, email, senhaHash }) {
   return usuario;
 }
 
-module.exports = { buscarPorEmail, criar };
+async function buscarPorId(id) {
+  // const { rows } = await pool.query('SELECT id, nome, username, email FROM usuarios WHERE id = $1', [id]);
+  // return rows[0] || null;
+  return usuarios.find((u) => String(u.id) === String(id)) || null;
+}
+
+module.exports = { buscarPorEmail, buscarPorId, criar };

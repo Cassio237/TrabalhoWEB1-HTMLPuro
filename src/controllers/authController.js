@@ -6,8 +6,13 @@ async function signup(req, res) {
 }
 
 async function login(req, res) {
-  const usuario = await authService.autenticar(req.body);
-  res.json({ message: 'Login realizado com sucesso.', data: { usuario } });
+  const { usuario, token } = await authService.login(req.body);
+  res.json({ message: 'Login realizado com sucesso.', data: { usuario, token } });
 }
 
-module.exports = { signup, login };
+async function me(req, res) {
+  const usuario = await authService.obterPerfil(req.usuario.id);
+  res.json({ message: 'OK', data: { usuario } });
+}
+
+module.exports = { signup, login, me };
