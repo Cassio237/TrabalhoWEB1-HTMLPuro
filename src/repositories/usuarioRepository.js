@@ -1,44 +1,25 @@
-// descomentar quando o BD existir
-// const pool = require('../config/postgres');
+const db = require('../config/database');
 
-//const usuarios = [];
-//let proximoId = 1;
-
-//Remover quando bd existir
-const bcrypt = require('bcrypt');
-const usuarios = [
-  {
-    id: 1,
-    nome: 'Dev Teste',
-    email: 'teste@gmail.com',
-    senha: bcrypt.hashSync('teste123', 10),
-  },
-];
-let proximoId = 2;
-//Remover quando bd existir
+const selecionarPorEmail = db.prepare(
+  'SELECT id, nome, email, senha, foto_url FROM usuarios WHERE email = ?'
+);
+const selecionarPorId = db.prepare(
+  'SELECT id, nome, email, foto_url FROM usuarios WHERE id = ?'
+);
+const inserir = db.prepare(
+  'INSERT INTO usuarios (nome, email, senha) VALUES (?, ?, ?) RETURNING id, nome, email, foto_url'
+);
 
 async function buscarPorEmail(email) {
-  // const { rows } = await pool.query('SELECT * FROM usuarios WHERE email = $1', [email]);
-  // return rows[0] || null;
-  return usuarios.find((u) => u.email === email) || null;
-}
-
-async function criar({ nome, email, senhaHash }) {
-  // const { rows } = await pool.query(
-  //   `INSERT INTO usuarios (nome, username, email, senha)
-  //    VALUES ($1, $2, $3, $4) RETURNING *`,
-  //   [nome, username, email, senhaHash]
-  // );
-  // return rows[0];
-  const usuario = { id: proximoId++, nome, email, senha: senhaHash };
-  usuarios.push(usuario);
-  return usuario;
+  return selecionarPorEmail.get(email) || null;
 }
 
 async function buscarPorId(id) {
-  // const { rows } = await pool.query('SELECT id, nome, username, email FROM usuarios WHERE id = $1', [id]);
-  // return rows[0] || null;
-  return usuarios.find((u) => String(u.id) === String(id)) || null;
+  return selecionarPorId.get(id) || null;
+}
+
+async function criar({ nome, email, senhaHash }) {
+  return inserir.get(nome, email, senhaHash);
 }
 
 module.exports = { buscarPorEmail, buscarPorId, criar };

@@ -6,12 +6,22 @@ const repo = require('../repositories/usuarioRepository');
 const publico = ({ id, nome, email }) => ({ id, nome, email });
 
 async function cadastrar({ name, email, password }) {
-  const existe = (await repo.buscarPorEmail(email));
-  if (existe) throw new AppError('E-mail já cadastrado.', 409);
+  const emailNormalizado = email.trim().toLowerCase();
+
+  if (await repo.buscarPorEmail(emailNormalizado)) {
+    throw new AppError('E-mail já cadastrado.', 409);
+  }
 
   const senhaHash = await bcrypt.hash(password, 10);
-  const usuario = await repo.criar({ nome: name, email, senhaHash });
-  return publico(usuario);
+
+  try {
+    const usuario = await repo.criar({ nome: name.trim(), email: emailNormalizado, senhaHash });
+    return publico(usuario);
+  } catch (err) {
+    // 2067 = violação de UNIQUE (duas requisições com o mesmo e-mail ao mesmo tempo)
+    if (err.errcode === 2067) throw new AppError('E-mail já cadastrado.', 409);
+    throw err;
+  }
 }
 
 async function autenticar({ email, password }) {
