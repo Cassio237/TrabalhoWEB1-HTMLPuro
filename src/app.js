@@ -4,7 +4,6 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 
-
 const authRoutes = require('./routes/authRoutes');
 const notFound = require('./middlewares/notFound');
 const errorHandler = require('./middlewares/errorHandler');
