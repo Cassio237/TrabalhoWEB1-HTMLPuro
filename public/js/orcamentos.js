@@ -1,7 +1,7 @@
-//import { CATEGORIAS, MESES, configurarModal, converterValor, esc, formatarMoeda, idUnico, lerDados, preencherSelect, salvarDados } from './modules/utils.js';
+import { CATEGORIAS, MESES, configurarModal, converterValor, esc, formatarMoeda, preencherSelect } from './modules/utils.js';
+import { criarOrcamento, excluirOrcamento, listarOrcamentos } from './modules/api.js';
 
-let orcamentos = lerDados('orcamentos');
-const transacoes = lerDados('transacoes');
+let orcamentos = [];
 const hoje = new Date();
 
 const lista = document.getElementById('listaOrcamentos');
@@ -15,14 +15,6 @@ const inpLimite = document.getElementById('inpLimiteOrcamento');
 
 preencherSelect(selCategoria, CATEGORIAS);
 
-// quanto já foi gasto naquela categoria, mês e ano
-function gastoDe(o) {
-  const prefixo = `${o.ano}-${String(o.mes).padStart(2, '0')}`;
-  return transacoes
-    .filter((t) => t.tipo === 'despesa' && t.categoria === o.categoria && t.data.startsWith(prefixo))
-    .reduce((total, t) => total + t.valor, 0);
-}
-
 function estadoDe(pct) {
   if (pct > 100) return { classe: 'estado-estourado', selo: 'Limite excedido', icone: 'x-circle' };
   if (pct >= 80) return { classe: 'estado-alerta', selo: 'Perto do limite', icone: 'exclamation-circle' };
@@ -30,7 +22,7 @@ function estadoDe(pct) {
 }
 
 function cardOrcamento(o) {
-  const gasto = gastoDe(o);
+  const gasto = o.gasto; // já calculado pelo servidor
   const pct = (gasto / o.limite) * 100;
   const barra = Math.min(100, pct);
   const estado = estadoDe(pct);
@@ -59,14 +51,18 @@ function valoresPadrao() {
   inpAno.value = hoje.getFullYear();
 }
 
-lista.addEventListener('click', (e) => {
+lista.addEventListener('click', async (e) => {
   const botao = e.target.closest('.btn-excluir');
   if (!botao) return;
   if (!confirm('Excluir este orçamento?')) return;
   const id = botao.closest('.orcamento').dataset.id;
-  orcamentos = orcamentos.filter((o) => o.id !== id);
-  salvarDados('orcamentos', orcamentos);
-  renderizar();
+  try {
+    await excluirOrcamento(id);
+    orcamentos = orcamentos.filter((o) => String(o.id) !== id);
+    renderizar();
+  } catch (err) {
+    alert(err.message);
+  }
 });
 
 configurarModal(modal, document.getElementById('btnNovoOrcamento'), [
@@ -74,7 +70,7 @@ configurarModal(modal, document.getElementById('btnNovoOrcamento'), [
   document.getElementById('btnCancelarOrcamento'),
 ]);
 
-form.addEventListener('submit', (e) => {
+form.addEventListener('submit', async (e) => {
   e.preventDefault();
   const limite = converterValor(inpLimite.value);
   if (!(limite > 0)) {
@@ -83,18 +79,27 @@ form.addEventListener('submit', (e) => {
     inpLimite.setCustomValidity('');
     return;
   }
-  const novo = { id: idUnico(), categoria: selCategoria.value, mes: Number(selMes.value), ano: Number(inpAno.value), limite };
-  if (orcamentos.some((o) => o.categoria === novo.categoria && o.mes === novo.mes && o.ano === novo.ano)) {
-    alert('Já existe um orçamento para essa categoria neste mês.');
-    return;
+  try {
+    const novo = await criarOrcamento({
+      categoria: selCategoria.value,
+      mes: Number(selMes.value),
+      ano: Number(inpAno.value),
+      limite,
+    });
+    orcamentos.push(novo);
+    form.reset();
+    valoresPadrao();
+    modal.close();
+    renderizar();
+  } catch (err) {
+    alert(err.message); // inclui o "Já existe um orçamento..." (409) vindo do servidor
   }
-  orcamentos.push(novo);
-  salvarDados('orcamentos', orcamentos);
-  form.reset();
-  valoresPadrao();
-  modal.close();
-  renderizar();
 });
 
 valoresPadrao();
+try {
+  orcamentos = await listarOrcamentos();
+} catch (err) {
+  alert(err.message);
+}
 renderizar();

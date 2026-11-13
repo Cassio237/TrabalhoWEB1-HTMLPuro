@@ -8,6 +8,8 @@ const path = require('path');
 const authRoutes = require('./routes/authRoutes');
 const notFound = require('./middlewares/notFound');
 const errorHandler = require('./middlewares/errorHandler');
+const transacaoRoutes = require('./routes/transacaoRoutes');
+const orcamentoRoutes = require('./routes/orcamentoRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -17,6 +19,8 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
 app.use('/api', authRoutes);
+app.use('/api/transacoes', transacaoRoutes);
+app.use('/api/orcamentos', orcamentoRoutes);
 app.use('/api', notFound);   // 404 só para rotas /api inexistentes
 app.use(errorHandler);       // sempre por último
 

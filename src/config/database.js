@@ -21,6 +21,29 @@ db.exec(`
     foto_url  TEXT,
     criado_em TEXT NOT NULL DEFAULT (datetime('now'))
   );
+
+  CREATE TABLE IF NOT EXISTS transacoes (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    usuario_id      INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+    tipo            TEXT NOT NULL CHECK (tipo IN ('receita', 'despesa')),
+    valor_centavos  INTEGER NOT NULL CHECK (valor_centavos > 0),
+    categoria       TEXT NOT NULL,
+    descricao       TEXT NOT NULL,
+    data            TEXT NOT NULL,
+    criado_em       TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+  CREATE INDEX IF NOT EXISTS idx_transacoes_usuario_data ON transacoes (usuario_id, data);
+
+  CREATE TABLE IF NOT EXISTS orcamentos (
+    id             INTEGER PRIMARY KEY AUTOINCREMENT,
+    usuario_id     INTEGER NOT NULL REFERENCES usuarios(id) ON DELETE CASCADE,
+    categoria      TEXT NOT NULL,
+    mes            INTEGER NOT NULL CHECK (mes BETWEEN 1 AND 12),
+    ano            INTEGER NOT NULL,
+    limite_centavos INTEGER NOT NULL CHECK (limite_centavos > 0),
+    criado_em      TEXT NOT NULL DEFAULT (datetime('now')),
+    UNIQUE (usuario_id, categoria, mes, ano)
+  );
 `);
 
 module.exports = db;

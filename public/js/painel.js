@@ -1,6 +1,12 @@
-import { MESES, corCss, criarGrafico, estiloEixos, formatarMoeda, formatarMoedaCompacta, itemTransacao, lerDados, totaisPorMes } from './modules/utils.js';
+import { MESES, corCss, criarGrafico, estiloEixos, formatarMoeda, formatarMoedaCompacta, itemTransacao, totaisPorMes } from './modules/utils.js';
+import { listarTransacoes } from './modules/api.js';
 
-const transacoes = lerDados('transacoes');
+let transacoes = [];
+try {
+  transacoes = await listarTransacoes();
+} catch (err) {
+  alert(err.message);
+}
 const hoje = new Date();
 const ano = hoje.getFullYear();
 const mes = hoje.getMonth() + 1;
@@ -67,6 +73,17 @@ if ([...receitas, ...despesas].some((v) => v > 0)) {
 }
 
 //Divisão por categoria
+const CORES_DESPESA = {
+  'Alimentação': '#ef4444', // vermelho
+  'Moradia': '#f97316',     // laranja
+  'Transporte': '#eab308',  // amarelo
+  'Lazer': '#ec4899',       // rosa
+  'Saúde': '#f70c00a8',       // vermelho
+  'Educação': '#0719a1',    // azul
+  'Outros': '#78716c',      // cinza quente
+};
+const COR_PADRAO = '#a8a29e';
+
 const porCategoria = {};
 doMes.filter((t) => t.tipo === 'despesa').forEach((t) => {
   porCategoria[t.categoria] = (porCategoria[t.categoria] ?? 0) + t.valor;
@@ -74,7 +91,6 @@ doMes.filter((t) => t.tipo === 'despesa').forEach((t) => {
 if (Object.keys(porCategoria).length > 0) {
   const area = criarArea();
   ocuparPainel('graficoCategorias', 'vazioCategorias', area);
-  const paleta = ['--sucesso', '--info', '--aviso', '--erro', '--acento', '--muted'].map(corCss);
   criarGrafico(area, {
     legend: { bottom: 0 },
     tooltip: { trigger: 'item', valueFormatter: formatarMoeda },
@@ -82,7 +98,13 @@ if (Object.keys(porCategoria).length > 0) {
       type: 'pie',
       radius: ['50%', '72%'],
       label: { show: false },
-      data: Object.entries(porCategoria).map(([name, value], i) => ({ name, value, itemStyle: { color: paleta[i % paleta.length] } })),
+      data: Object.entries(porCategoria)
+        .sort(([, a], [, b]) => b - a) // maiores fatias primeiro
+        .map(([name, value]) => ({
+          name,
+          value,
+          itemStyle: { color: CORES_DESPESA[name] ?? COR_PADRAO },
+        })),
     }],
   });
 }
@@ -95,156 +117,6 @@ if (transacoes.length > 0) {
     .map((t) => itemTransacao(t, false)).join('');
   ocuparPainel('listaAtividades', 'vazioAtividades', lista);
 }
-
-/////////////////////////////////////////////////
-//  Graficos echartz mockado -- apagar depois //
-
-const graficoReceitas = document.getElementById('graficoReceitasDespesas');
-const graficoCategorias = document.getElementById('graficoCategorias');
-
-// Dados mockados: Receitas vs Despesas
-const chartReceitas = echarts.init(graficoReceitas);
-
-chartReceitas.setOption({
-    tooltip: {
-        trigger: 'axis'
-    },
-
-    legend: {
-        bottom: 0,
-        textStyle: {
-            color: '#e0e0e0'
-        }
-    },
-
-    grid: {
-        left: 60,
-        right: 20,
-        top: 20,
-        bottom: 55
-    },
-
-    xAxis: {
-        type: 'category',
-        data: ['Out/26'],
-        axisLabel: {
-            color: '#c0c0c0'
-        },
-        axisLine: {
-            lineStyle: {
-                color: '#777'
-            }
-        }
-    },
-
-    yAxis: {
-        type: 'value',
-        max: 3000,
-        interval: 750,
-        axisLabel: {
-            color: '#c0c0c0',
-            formatter: function (valor) {
-                if (valor === 0) return 'R$ 0';
-                if (valor >= 1000) {
-                    return 'R$ ' + (valor / 1000).toLocaleString('pt-BR') + ' mil';
-                }
-                return 'R$ ' + valor;
-            }
-        },
-        splitLine: {
-            lineStyle: {
-                color: '#625b50',
-                type: 'dashed'
-            }
-        }
-    },
-
-    series: [
-        {
-            name: 'Receita',
-            type: 'bar',
-            data: [2900],
-            barWidth: 16,
-            itemStyle: {
-                color: '#10a078',
-                borderRadius: [8, 8, 0, 0]
-            }
-        },
-        {
-            name: 'Despesa',
-            type: 'bar',
-            data: [1750],
-            barWidth: 16,
-            itemStyle: {
-                color: '#e01818',
-                borderRadius: [8, 8, 0, 0]
-            }
-        }
-    ]
-});
-
-// Categorias mockadas
-const dadosCategorias = [
-    {
-        name: 'Entretenimento',
-        value: 86,
-        itemStyle: {
-            color: '#10a078'
-        }
-    },
-    {
-        name: 'Compras',
-        value: 14,
-        itemStyle: {
-            color: '#1456b8'
-        }
-    }
-];
-
-// Dados mockados: Divisão por Categoria
-const chartCategorias = echarts.init(graficoCategorias);
-
-chartCategorias.setOption({
-    tooltip: {
-        trigger: 'item',
-        formatter: '{b}: {d}%'
-    },
-
-    legend: {
-        orient: 'vertical',
-        right: 10,
-        top: 'center',
-        textStyle: {
-            color: '#e0e0e0',
-            fontSize: 14
-        },
-        formatter: function (nome) {
-            const item = dadosCategorias.find(item => item.name === nome);
-            return nome + '    ' + item.value + '%';
-        }
-    },
-
-    series: [
-        {
-            name: 'Despesas',
-            type: 'pie',
-            radius: ['35%', '58%'],
-            center: ['35%', '50%'],
-            avoidLabelOverlap: true,
-
-            itemStyle: {
-                borderColor: '#141616',
-                borderWidth: 2
-            },
-
-            label: {
-                show: false
-            },
-
-            data: dadosCategorias
-        }
-    ]
-});
 
 // Ajusta os gráficos quando a janela muda de tamanho
 window.addEventListener('resize', function () {

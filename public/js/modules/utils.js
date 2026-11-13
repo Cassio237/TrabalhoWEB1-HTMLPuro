@@ -1,5 +1,4 @@
 // Funções compartilhadas entre as telas do dashboard.
-// Os dados ficam no localStorage por enquanto: quando o api.js existir, só lerDados/salvarDados mudam.
 
 export const CATEGORIAS = ['Alimentação', 'Moradia', 'Transporte', 'Lazer', 'Saúde', 'Educação', 'Salário', 'Freelance', 'Outros'];
 export const MESES = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
@@ -11,7 +10,6 @@ export const formatarMoeda = (valor) => moeda.format(valor);
 export const formatarMoedaCompacta = (valor) => moedaCompacta.format(valor);
 export const formatarData = (iso) => new Date(`${iso}T00:00:00`).toLocaleDateString('pt-BR');
 export const dataDeHoje = () => new Date().toLocaleDateString('sv-SE'); // AAAA-MM-DD no fuso local
-export const idUnico = () => Date.now().toString(36) + Math.random().toString(36).slice(2);
 
 // "1.000,50" ou "1000.50" -> 1000.5 (NaN se inválido)
 export function converterValor(texto) {
@@ -23,20 +21,6 @@ export function converterValor(texto) {
 // protege o texto digitado pelo usuário antes de usar em innerHTML
 export const esc = (texto) =>
   String(texto).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-
-export function lerDados(chave) {
-  try {
-    return JSON.parse(localStorage.getItem(chave)) ?? [];
-  } catch (e) {
-    return [];
-  }
-}
-
-export function salvarDados(chave, dados) {
-  try {
-    localStorage.setItem(chave, JSON.stringify(dados));
-  } catch (e) { }
-}
 
 export function preencherSelect(select, opcoes) {
   opcoes.forEach((opcao) => select.append(new Option(opcao, opcao)));

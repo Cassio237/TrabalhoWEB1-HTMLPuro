@@ -448,6 +448,7 @@ select:focus-visible {
 .lista {
   list-style: none;
   overflow: hidden;
+  width: 100%;
 }
 
 .item {
