@@ -1,5 +1,5 @@
 node_modules/
 data/
-.env
+# .env //Removi o env do gitignore para que o arquivo .env seja versionado
 *.log
 .DS_Store
