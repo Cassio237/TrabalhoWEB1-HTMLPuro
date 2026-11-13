@@ -1,6 +1,12 @@
-import { MESES, corCss, criarGrafico, estiloEixos, formatarMoeda, formatarMoedaCompacta, lerDados, totaisPorMes } from './modules/utils.js';
+import { MESES, corCss, criarGrafico, estiloEixos, formatarMoeda, formatarMoedaCompacta, totaisPorMes } from './modules/utils.js';
+import { listarTransacoes } from './modules/api.js';
 
-const transacoes = lerDados('transacoes');
+let transacoes = [];
+try {
+  transacoes = await listarTransacoes();
+} catch (err) {
+  alert(err.message);
+}
 const ano = new Date().getFullYear();
 const { receitas, despesas } = totaisPorMes(transacoes, ano);
 const economia = receitas.map((r, i) => r - despesas[i]);

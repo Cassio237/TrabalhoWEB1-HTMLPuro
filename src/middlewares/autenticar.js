@@ -10,7 +10,7 @@ module.exports = (req, res, next) => {
 
   try {
     const payload = verificarToken(token);
-    req.usuario = { id: payload.sub, email: payload.email };
+    req.usuario = { id: Number(payload.sub), email: payload.email };
     next();
   } catch (err) {
     const msg = err.name === 'TokenExpiredError'

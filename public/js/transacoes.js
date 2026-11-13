@@ -1,6 +1,7 @@
-import { CATEGORIAS, configurarModal, converterValor, dataDeHoje, idUnico, itemTransacao, lerDados, preencherSelect, salvarDados } from './modules/utils.js';
+import { CATEGORIAS, configurarModal, converterValor, dataDeHoje, itemTransacao, preencherSelect } from './modules/utils.js';
+import { criarTransacao, excluirTransacao, listarTransacoes } from './modules/api.js';
 
-let transacoes = lerDados('transacoes');
+let transacoes = [];
 let tipoAtual = 'despesa';
 
 const lista = document.getElementById('listaTransacoes');
@@ -25,7 +26,7 @@ function renderizar() {
     .filter((t) => t.descricao.toLowerCase().includes(termo)
       && (!filtroTipo.value || t.tipo === filtroTipo.value)
       && (!filtroCategoria.value || t.categoria === filtroCategoria.value))
-    .sort((a, b) => b.data.localeCompare(a.data));
+    .sort((a, b) => b.data.localeCompare(a.data) || b.id - a.id);
 
   lista.innerHTML = filtradas.map((t) => itemTransacao(t)).join('');
   lista.hidden = filtradas.length === 0;
@@ -42,14 +43,18 @@ function selecionarTipo(tipo) {
 [busca, filtroTipo, filtroCategoria].forEach((campo) => campo.addEventListener('input', renderizar));
 
 // excluir (um só listener para todos os botões da lista)
-lista.addEventListener('click', (e) => {
+lista.addEventListener('click', async (e) => {
   const botao = e.target.closest('.btn-excluir');
   if (!botao) return;
   if (!confirm('Excluir esta transação?')) return;
   const id = botao.closest('.item').dataset.id;
-  transacoes = transacoes.filter((t) => t.id !== id);
-  salvarDados('transacoes', transacoes);
-  renderizar();
+  try {
+    await excluirTransacao(id);
+    transacoes = transacoes.filter((t) => String(t.id) !== id);
+    renderizar();
+  } catch (err) {
+    alert(err.message);
+  }
 });
 
 // janela de nova transação
@@ -60,7 +65,7 @@ configurarModal(modal, document.getElementById('btnNovaTransacao'), [
 btnReceita.addEventListener('click', () => selecionarTipo('receita'));
 btnDespesa.addEventListener('click', () => selecionarTipo('despesa'));
 
-form.addEventListener('submit', (e) => {
+form.addEventListener('submit', async (e) => {
   e.preventDefault();
   const valor = converterValor(inpValor.value);
   if (!(valor > 0)) {
@@ -69,19 +74,28 @@ form.addEventListener('submit', (e) => {
     inpValor.setCustomValidity('');
     return;
   }
-  transacoes.push({
-    id: idUnico(),
-    tipo: tipoAtual,
-    valor,
-    categoria: selCategoria.value,
-    descricao: inpDescricao.value.trim(),
-    data: dataDeHoje(),
-  });
-  salvarDados('transacoes', transacoes);
-  form.reset();
-  selecionarTipo('despesa');
-  modal.close();
-  renderizar();
+  try {
+    const nova = await criarTransacao({
+      tipo: tipoAtual,
+      valor,
+      categoria: selCategoria.value,
+      descricao: inpDescricao.value.trim(),
+      data: dataDeHoje(),
+    });
+    transacoes.push(nova);
+    form.reset();
+    selecionarTipo('despesa');
+    modal.close();
+    renderizar();
+  } catch (err) {
+    alert(err.message);
+  }
 });
 
+// carga inicial: busca as transações do usuário no servidor
+try {
+  transacoes = await listarTransacoes();
+} catch (err) {
+  alert(err.message);
+}
 renderizar();
